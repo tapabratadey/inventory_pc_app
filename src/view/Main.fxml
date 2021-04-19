@@ -4,22 +4,54 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<AnchorPane prefHeight="602.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
-      <Button alignment="CENTER" layoutX="200.0" layoutY="233.0" mnemonicParsing="false" onAction="#toSecond"
-              prefHeight="92.0" prefWidth="216.0" text="To The Second Scene">
+      <Label alignment="CENTER" layoutX="7.0" layoutY="6.0" prefHeight="48.0" prefWidth="384.0" text="Inventory Management System" AnchorPane.bottomAnchor="548.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="809.0" AnchorPane.topAnchor="6.0">
          <font>
-            <Font size="17.0" />
-         </font>
-      </Button>
-      <Label alignment="CENTER" layoutX="117.0" layoutY="103.0" prefHeight="84.0" prefWidth="366.0"
-             text="Main Screen" AnchorPane.bottomAnchor="223.0" AnchorPane.leftAnchor="134.0"
-             AnchorPane.rightAnchor="155.0" AnchorPane.topAnchor="93.0">
-         <font>
-            <Font name="System Bol Italic" size="57.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
+      <AnchorPane layoutX="12.0" layoutY="59.0" prefHeight="492.0" prefWidth="561.0" style="-fx-border-radius: 20; -fx-border-color: black;">
+         <children>
+            <TableView layoutX="1.0" layoutY="78.0" prefHeight="326.0" prefWidth="559.0">
+              <columns>
+                <TableColumn prefWidth="110.0" text="Part ID" />
+                <TableColumn prefWidth="150.0" text="Part Name" />
+                  <TableColumn prefWidth="151.0" text="Inventory Level" />
+                  <TableColumn prefWidth="147.0" text="Price/Cost per Unit" />
+              </columns>
+            </TableView>
+            <Button layoutX="318.0" layoutY="430.0" mnemonicParsing="false" text=" Add " />
+            <Button layoutX="390.0" layoutY="430.0" mnemonicParsing="false" text="Modify" />
+            <Button layoutX="471.0" layoutY="430.0" mnemonicParsing="false" text="Delete" />
+            <Label layoutX="14.0" layoutY="43.0" text="Parts">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Button alignment="CENTER" layoutX="348.0" layoutY="40.0" mnemonicParsing="false" opacity="0.3" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-color: black;" text="Search" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="600.0" layoutY="59.0" prefHeight="492.0" prefWidth="371.0" style="-fx-border-color: black; -fx-border-radius: 20;">
+         <children>
+            <TableView layoutX="3.0" layoutY="77.0" prefHeight="326.0" prefWidth="589.0">
+                <columns>
+                    <TableColumn prefWidth="115.0" text="Part ID" />
+                    <TableColumn prefWidth="145.0" text="Part Name" />
+                    <TableColumn prefWidth="167.0" text="Inventory Level" />
+                    <TableColumn prefWidth="161.0" text="Price/Cost per Unit" />
+                </columns>
+            </TableView>
+            <Button layoutX="367.0" layoutY="435.0" mnemonicParsing="false" text=" Add " />
+            <Button layoutX="438.0" layoutY="435.0" mnemonicParsing="false" text="Modify" />
+            <Button layoutX="513.0" layoutY="435.0" mnemonicParsing="false" text="Delete" />
+            <Label layoutX="14.0" layoutY="43.0" text="Products">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Button alignment="CENTER" layoutX="380.0" layoutY="40.0" mnemonicParsing="false" opacity="0.3" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-color: black;" text="Search" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
