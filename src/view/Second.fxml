@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SecondController">
+    <children>
+        <Button alignment="CENTER" layoutX="200.0" layoutY="233.0" mnemonicParsing="false" onAction="#toMain"
+                prefHeight="92.0" prefWidth="216.0" text="To The Main Scene">
+            <font>
+                <Font size="17.0" />
+            </font>
+        </Button>
+        <Label alignment="CENTER" layoutX="117.0" layoutY="103.0" prefHeight="84.0" prefWidth="366.0"
+               text="Second Screen" AnchorPane.bottomAnchor="223.0" AnchorPane.leftAnchor="134.0"
+               AnchorPane.rightAnchor="155.0" AnchorPane.topAnchor="93.0">
+            <font>
+                <Font name="System Bol Italic" size="57.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
