@@ -75,7 +75,9 @@
             <TextField layoutX="407.0" layoutY="31.0" opacity="0.0" />
          </children>
       </AnchorPane>
-      <Button layoutX="957.0" layoutY="563.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="230.0" style="-fx-background-color: red; -fx-border-radius: 20;" text="Exit" textFill="WHITE">
+      <Button layoutX="957.0" layoutY="563.0"
+              mnemonicParsing="false" onAction="#exitProgram"
+              prefHeight="27.0" prefWidth="230.0" style="-fx-background-color: red; -fx-border-radius: 20;" text="Exit" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

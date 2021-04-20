@@ -1,7 +1,9 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,9 +14,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Inventory;
 import model.Product;
+import model.Part;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -44,6 +49,12 @@ public class MainController implements Initializable {
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         productInvLevel.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
         productPriceUnit.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
+
+        partTable.setItems(Inventory.getParts());
+        partID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
+        partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
+        partInvLevel.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
+        partPriceUnit.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
     }
     public void toAddPart(ActionEvent actionEvent) throws IOException {
         //load widget hierarchy of next screen
@@ -115,5 +126,9 @@ public class MainController implements Initializable {
 
         //raise the curtain
         stage.show();
+    }
+
+    public void exitProgram(ActionEvent actionEvent) throws IOException {
+        System.exit(0);
     }
 }
