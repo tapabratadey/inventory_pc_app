@@ -4,10 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="645.0" prefWidth="1032.0"
-            xmlns="http://javafx.com/javafx/11.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.AddProduct">
+<AnchorPane prefHeight="645.0" prefWidth="1032.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddProduct">
    <children>
        <Button alignment="CENTER" layoutX="768.0" layoutY="32.0" mnemonicParsing="false" opacity="0.3" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-color: black;" text="Search" />
        <TextField layoutX="793.0" layoutY="37.0" opacity="0.0" />
@@ -32,10 +29,7 @@
             <Label text="Price" GridPane.rowIndex="3" />
             <Label text="Max" GridPane.rowIndex="4" />
             <Label prefHeight="17.0" prefWidth="59.0" text="        Min" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <TextField GridPane.columnIndex="1"
-                       disable="true"
-                       editable ="false"
-                       text="Auto Gen-Disabled"/>
+            <TextField disable="true" editable="false" text="Auto Gen-Disabled" GridPane.columnIndex="1" />
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -58,7 +52,7 @@
       <Button layoutX="925.0" layoutY="290.0" mnemonicParsing="false" text="Add" />
       <Button layoutX="814.0" layoutY="556.0" mnemonicParsing="false" text="Remove Associated Parts" />
       <Button layoutX="847.0" layoutY="594.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="910.0" layoutY="594.0" mnemonicParsing="false" text="Cancel" />
+      <Button layoutX="910.0" layoutY="594.0" mnemonicParsing="false" onAction="#addProductCancelButton" text="Cancel" />
       <Label layoutX="77.0" layoutY="41.0" prefHeight="25.0" prefWidth="109.0" text="Add Product">
          <font>
             <Font name="System Bold" size="18.0" />

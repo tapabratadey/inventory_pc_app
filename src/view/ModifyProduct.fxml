@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="645.0" prefWidth="1032.0"
             xmlns="http://javafx.com/javafx/11.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.AddProduct">
+            fx:controller="controller.ModifyProduct">
     <children>
         <Button alignment="CENTER" layoutX="768.0" layoutY="32.0" mnemonicParsing="false" opacity="0.3" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-color: black;" text="Search" />
         <TextField layoutX="793.0" layoutY="37.0" opacity="0.0" />
@@ -55,7 +55,7 @@
         <Button layoutX="925.0" layoutY="290.0" mnemonicParsing="false" text="Add" />
         <Button layoutX="814.0" layoutY="556.0" mnemonicParsing="false" text="Remove Associated Parts" />
         <Button layoutX="847.0" layoutY="594.0" mnemonicParsing="false" text="Save" />
-        <Button layoutX="910.0" layoutY="594.0" mnemonicParsing="false" text="Cancel" />
+        <Button layoutX="910.0" layoutY="594.0" mnemonicParsing="false" onAction="#modifyProductCancelButton" text="Cancel" />
         <Label layoutX="77.0" layoutY="41.0" prefHeight="34.0" prefWidth="138.0" text="Modify Product">
             <font>
                 <Font name="System Bold" size="18.0" />
