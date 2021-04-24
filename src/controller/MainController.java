@@ -10,8 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.Node;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -23,6 +22,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -34,11 +34,13 @@ public class MainController implements Initializable {
     public TableColumn productInvLevel;
     public TableColumn productPriceUnit;
 
-    public TableView partTable;
+    private TableView partTable;
     public TableColumn partID;
     public TableColumn partName;
     public TableColumn partInvLevel;
     public TableColumn partPriceUnit;
+    public TextField searchProductsTxt;
+    public TextField searchPartTxt;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,6 +52,9 @@ public class MainController implements Initializable {
         productInvLevel.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
         productPriceUnit.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
 
+        /*for (Part part: Inventory.getParts()){
+            System.out.println(part.getName());
+        }*/
         partTable.setItems(Inventory.getParts());
         partID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
@@ -75,8 +80,13 @@ public class MainController implements Initializable {
     }
 
     public void toModifyPart(ActionEvent actionEvent) throws IOException {
-        //load widget hierarchy of next screen
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/ModifyPart.fxml")));
+
+        FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyPart.fxml")));
+        Parent root = (Parent) loader.load();
+        ModifyPart modPart = loader.getController();
+        Part part = partTable.getSelectionModel().getSelectedItems();
+        int idx = partTable.getSelectionModel().getSelectedIndex();
+        if (part != null){ modPart.partToModify(part, idx); }
 
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -130,5 +140,38 @@ public class MainController implements Initializable {
 
     public void exitProgram(ActionEvent actionEvent) throws IOException {
         System.exit(0);
+    }
+
+    public void searchProductsButton(ActionEvent actionEvent) {
+        String searchProdText = searchProductsTxt.getText();
+        productTable.getSelectionModel().select(Inventory.searchProducts(searchProdText));
+    }
+
+    public void searchPartButton(ActionEvent actionEvent) {
+        String searchPartText = searchPartTxt.getText();
+        partTable.getSelectionModel().select(Inventory.searchParts(searchPartText));
+
+    }
+
+    public void toDeleteProduct(ActionEvent actionEvent) {
+        Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");
+        Optional<ButtonType> optButton = alertUser.showAndWait();
+        if (optButton.isPresent() && optButton.get() == ButtonType.OK){
+            ObservableList<Product> products, aPart;
+            products = productTable.getItems();
+            aPart = productTable.getSelectionModel().getSelectedItems();
+            aPart.forEach(products::remove);
+        }
+    }
+
+    public void toDeletePart(ActionEvent actionEvent) {
+        Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");
+        Optional<ButtonType> optButton = alertUser.showAndWait();
+        if (optButton.isPresent() && optButton.get() == ButtonType.OK){
+            ObservableList<Part> parts, aPart;
+            parts = partTable.getItems();
+            aPart = partTable.getSelectionModel().getSelectedItems();
+            aPart.forEach(parts::remove);
+        }
     }
 }
