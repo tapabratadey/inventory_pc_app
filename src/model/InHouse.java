@@ -1,5 +1,9 @@
 package model;
-
+/**
+ * InHouse parts get initialized with incoming part id, name, price,
+ * *  stock, min, max, and machineID
+ * * getMachineID() is a getter that returns the machineID;
+ */
 public class InHouse extends Part{
 
     private int machineID;

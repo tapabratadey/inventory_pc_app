@@ -1,5 +1,9 @@
 package model;
-
+/**
+ * Outsourced parts get initialized with incoming part id, name, price,
+ *  *  stock, min, max, and machineID
+ *  * getComName() is a getter that returns the company name of the manufactured part;
+ */
 public class Outsourced extends Part{
 
     private String compName;

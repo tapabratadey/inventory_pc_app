@@ -7,24 +7,32 @@ import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
+/**
+ * Inventory class holds:
+ * 1. parts list
+ * 2. products list
+ * 3. addPart(): adds an incoming part to the parts list
+ * 4. addProduct(): adds an incoming product to the products list
+ * 5. searchParts(): searches for a part by finding a match with its partToSearch param
+ * 6. searchProducts(): searches for a product by finding a match with its partToSearch param
+ *
+ * RUNTIME_ERROR: incompatible types error occurred in searchProducts()
+ *                while assigning int to string. fixed by using: String.valueOf
+ * FUTURE_ENHANCEMENT:search functions can be improved.
+ *                    search box can autocomplete using a drop-down list.
+ *
+ */
+
 public class Inventory {
     public static ObservableList<Part> parts = FXCollections.observableArrayList();
     public static ObservableList<Product> products = FXCollections.observableArrayList();
-//    public static ObservableList<Product> associatedParts = FXCollections.observableArrayList();
 
     public static void addPart(Part part){ parts.add(part); }
     public static void addProduct(Product product){ products.add(product); }
-//    public static void setAssociatedParts(Part part){
-//        associatedParts.add(part);
-//    }
-
     public static ObservableList<Part> getParts(){ return parts; }
     public static ObservableList<Product> getProducts(){
         return products;
     }
-//    public static ObservableList<Part> getAssociatedParts(){
-//        return associatedParts;
-//    }
     public static Part searchParts(String partToSearch){
         for (Part part : getParts()){
             String idInString = String.valueOf(part.getId());
@@ -36,7 +44,6 @@ public class Inventory {
                 Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
                 Optional<ButtonType> optButton = alertUser.showAndWait();
             }
-
         }
         return null;
     }
@@ -55,6 +62,3 @@ public class Inventory {
         return null;
     }
 }
-
-
-

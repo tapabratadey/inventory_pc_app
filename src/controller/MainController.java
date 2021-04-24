@@ -26,9 +26,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * MainController controls the Main view
+ * The view has two tables: Parts and Products,
+ * Add/modify/delete buttons for both tables.
+ * And an exit button.
+ * RUNTIME_ERROR: IndexOutOfBoundsException in toDeleteProduct()
+ *                fixed it by grabbing the table's selected index
+ *                then if (index >= 0) remove the product
+ * FUTURE_ENHANCEMENT: Using a db to store data than computer memory.
+ */
+
 public class MainController implements Initializable {
-
-
+    // vars
     public TableView productTable;
     public TableColumn productID;
     public TableColumn productName;
@@ -43,45 +53,55 @@ public class MainController implements Initializable {
     public TextField searchProductsTxt;
     public TextField searchPartTxt;
 
+    /**
+     * @param url
+     * @param resourceBundle
+     * populates and sets up Product and Parts tables
+     */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         productTable.setItems(Inventory.getProducts());
-
         productID.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         productInvLevel.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
         productPriceUnit.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
-
-        /*for (Part part: Inventory.getParts()){
-            System.out.println(part.getName());
-        }*/
         partTable.setItems(Inventory.getParts());
         partID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partInvLevel.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
         partPriceUnit.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
     }
+
+    /**
+     * click on add button under parts table fires toAddPart() which loads addpart.fxml
+     * @param actionEvent
+     * @throws IOException
+     */
+
     public void toAddPart(ActionEvent actionEvent) throws IOException {
         //load widget hierarchy of next screen
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/AddPart.fxml")));
-
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
         //Create the New Scene
         Scene scene = new Scene(root, 668, 400);
         stage.setTitle("Add Part");
-
         //Set the Scene on the stage
         stage.setScene(scene);
-
         //raise the curtain
         stage.show();
     }
 
-    public void toModifyPart(ActionEvent actionEvent) throws IOException {
+    /**
+     * Click on modify button under parts table fires toModifyPart() which loads ModifyPart.fxml
+     * A selected part and it's index to be modified gets passed to the partToModify()
+     * @param actionEvent
+     * @throws IOException
+     */
 
+    public void toModifyPart(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyPart.fxml")));
         Parent root = (Parent) loader.load();
         ModifyPart modPart = loader.getController();
@@ -91,38 +111,43 @@ public class MainController implements Initializable {
             int idx = partTable.getSelectionModel().getSelectedIndex();
             if (part != null){ modPart.partToModify(part, idx); }
         });
-
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
         //Create the New Scene
         Scene scene = new Scene(root, 668, 400);
         stage.setTitle("Modify Part");
-
         //Set the Scene on the stage
         stage.setScene(scene);
-
         //raise the curtain
         stage.show();
     }
+
+    /**
+     * click on add button under Products table fires toAddProduct() which loads addProduct.fxml
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void toAddProduct(ActionEvent actionEvent) throws IOException {
         //load widget hierarchy of next screen
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/AddProduct.fxml")));
-
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
         //Create the New Scene
         Scene scene = new Scene(root, 1032, 645);
         stage.setTitle("Add Product");
-
         //Set the Scene on the stage
         stage.setScene(scene);
-
         //raise the curtain
         stage.show();
     }
+
+    /**
+     * Click on modify button under Products table fires toModifyProduct() which loads ModifyProduct.fxml
+     * A selected product and it's index to be modified gets passed to the productToModify()
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void toModifyProduct(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyProduct.fxml")));
@@ -134,35 +159,58 @@ public class MainController implements Initializable {
             int idx = productTable.getSelectionModel().getSelectedIndex();
             if (product != null){ modProduct.productToModify(product, idx); }
         });
-
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
         //Create the New Scene
         Scene scene = new Scene(root, 1032, 645);
         stage.setTitle("Modify Product");
-
         //Set the Scene on the stage
         stage.setScene(scene);
-
         //raise the curtain
         stage.show();
     }
 
+    /**
+     * click on the exit button calls exitProgram which exits the program safely
+     * @param actionEvent
+     * @throws IOException
+     */
+
     public void exitProgram(ActionEvent actionEvent) throws IOException {
         System.exit(0);
     }
+
+    /**
+     * Product search string gets passed to Inventory.searchProducts which returns a product
+     * the product gets selected in the productTable
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void searchProductsButton(ActionEvent actionEvent) {
         String searchProdText = searchProductsTxt.getText();
         productTable.getSelectionModel().select(Inventory.searchProducts(searchProdText));
     }
 
+    /**
+     * Part search string gets passed to Inventory.searchParts which returns a product
+     * the part gets selected in the partTable
+     * @param actionEvent
+     * @throws IOException
+     */
+
     public void searchPartButton(ActionEvent actionEvent) {
         String searchPartText = searchPartTxt.getText();
         partTable.getSelectionModel().select(Inventory.searchParts(searchPartText));
-
     }
+
+    /**
+     * click on delete button under products table fires toDeleteProduct()
+     * a selected product gets removed
+     * An confirmation alert is sent to the user.
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void toDeleteProduct(ActionEvent actionEvent) {
         Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");
@@ -179,8 +227,15 @@ public class MainController implements Initializable {
         catch(IndexOutOfBoundsException | NoSuchElementException err){
             System.out.println(err);
         }
-
     }
+
+    /**
+     * click on delete button under parts table fires toDeletePart()
+     * a selected part gets removed
+     * An confirmation alert is sent to the user.
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void toDeletePart(ActionEvent actionEvent) {
         Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");

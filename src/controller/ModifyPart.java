@@ -16,7 +16,18 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * ModifyPart controls the add part view.
+ * modifyPartSaveButton(): saves a new part in an list
+ * modifyPartCancelButton(): cancels execution returns to main view
+ * modifyPartinHouse(): changes label's text to Machine ID
+ * modifyPartOutsourced(): changes label's text to Company Name
+ * RUNTIME_ERROR: ran into "cannot find symbol" error bc I misspelled a variable
+ * FUTURE_ENHANCEMENTS: Improve UI for the toggle buttons
+ */
+
 public class ModifyPart {
+    //vars
     public TextField modifyPartMin;
     public TextField partID;
     public RadioButton toggleInHouseBtn;
@@ -37,31 +48,26 @@ public class ModifyPart {
         if (optButton.isPresent() && optButton.get() == ButtonType.OK){
             //load widget hierarchy of next screen
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-
             //get the stage from an event's source widget
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
             //Create the New Scene
             Scene scene = new Scene(root, 1200, 600);
             stage.setTitle("Inventory System");
-
             //Set the Scene on the stage
             stage.setScene(scene);
-
             //raise the curtain
             stage.show();
         }
     }
+
     public void modifyPartinHouse(ActionEvent actionEvent) {
         toggleInHouse = true;
         machineIDLabelTxt.setText("Machine ID");
     }
-
     public void modifyPartOutsourced(ActionEvent actionEvent) {
         toggleInHouse = false;
         machineIDLabelTxt.setText("Company Name");
     }
-
     public void modifyPartSaveButton(ActionEvent actionEvent) throws IOException {
         int id = partToModify.getId();
         String partName = modifyPartName.getText();
@@ -83,19 +89,14 @@ public class ModifyPart {
                         partMax, machineID);
                 Inventory.getParts().set(toModifyIdx, addPart);
             }
-
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-
             //get the stage from an event's source widget
             Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
-
             //Create the New Scene
             Scene scene = new Scene(root, 1200, 600);
             stage.setTitle("Inventory System");
-
             //Set the Scene on the stage
             stage.setScene(scene);
-
             //raise the curtain
             stage.show();
         }
@@ -109,7 +110,6 @@ public class ModifyPart {
     public void partToModify(Part part, int idx) {
         partToModify = part;
         toModifyIdx = idx;
-
         if (part instanceof InHouse){
             InHouse inHousePart = (InHouse)part;
             toggleInHouseBtn.setSelected(true);

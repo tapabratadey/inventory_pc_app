@@ -21,6 +21,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * ModifyProduct controls the ModifyProduct view
+ * initliaze(): updates table view calling updateTable()
+ *              sets up parts and associated tables
+ * modifyProductCancelButton(): returns the user back to main view
+ * productToModify(): retrieves the product to modify
+ * addProductButton(): adds parts to associated parts lists
+ * deleteAssPart(): removes parts from associated parts table
+ * saveProduct(): save a new part and it's associated parts to the list
+ * searchPartButton(): search button handler
+ * addProductCancelButton(): returns the user back to the main view
+ * RUNTIME_ERROR: NumberFormatException while converting string to ints
+ *                used Integer.parseInt();
+ * FUTURE_ENHANCEMENT: Add more product info.
+ */
+
+
 public class ModifyProduct implements Initializable {
     public TableView partTable;
     public TableColumn partID;
@@ -48,7 +65,7 @@ public class ModifyProduct implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        updateTable();
         partTable.setItems(Inventory.getParts());
         partID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
@@ -69,17 +86,13 @@ public class ModifyProduct implements Initializable {
         if (optButton.isPresent() && optButton.get() == ButtonType.OK) {
             //load widget hierarchy of next screen
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-
             //get the stage from an event's source widget
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-
             //Create the New Scene
             Scene scene = new Scene(root, 1200, 600);
             stage.setTitle("Inventory System");
-
             //Set the Scene on the stage
             stage.setScene(scene);
-
             //raise the curtain
             stage.show();
         }
@@ -88,7 +101,6 @@ public class ModifyProduct implements Initializable {
     public void productToModify(Product product, int idx) {
         productToModify = product;
         toModifyIdx = idx;
-
         Product newProduct = product;
         id.setText(Integer.toString(newProduct.getId()));
         name.setText(newProduct.getName());
@@ -96,8 +108,6 @@ public class ModifyProduct implements Initializable {
         min.setText(Integer.toString(newProduct.getMin()));
         price.setText(Double.toString(newProduct.getPrice()));
         inv.setText(Integer.toString(newProduct.getStock()));
-
-
     }
 
     public void addProductButton(ActionEvent actionEvent) {
@@ -115,7 +125,6 @@ public class ModifyProduct implements Initializable {
         Optional<ButtonType> optButton = alertUser.showAndWait();
         try {
             if (optButton.isPresent() && optButton.get() == ButtonType.OK) {
-
                 int idx = associatedPartTable.getSelectionModel().getSelectedIndex();
                 if (idx >= 0) {
                     asctdPart.getAssociatedParts().remove(associatedPartTable.getSelectionModel().getSelectedItem());
@@ -133,28 +142,22 @@ public class ModifyProduct implements Initializable {
         double priceCost = Double.parseDouble(price.getText());
         int partMin = Integer.parseInt(min.getText());
         int partMax = Integer.parseInt(max.getText());
-        //                    System.out.println(addPartMachineID.getText());
         int machineID = Integer.parseInt(id.getText());
         Product addProduct = new Product(idPart, partName, priceCost, invLevel, partMin,
                 partMax);
         Inventory.getProducts().set(toModifyIdx, addProduct);
-
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
-
         //Create the New Scene
         Scene scene = new Scene(root, 1200, 600);
         stage.setTitle("Inventory System");
-
         //Set the Scene on the stage
         stage.setScene(scene);
-
         //raise the curtain
         stage.show();
-
     }
+
     public void searchPartButton(ActionEvent actionEvent) {
         String searchPartText = searchPartTxt.getText();
         partTable.getSelectionModel().select(Inventory.searchParts(searchPartText));
@@ -166,19 +169,18 @@ public class ModifyProduct implements Initializable {
         if (optButton.isPresent() && optButton.get() == ButtonType.OK){
             //load widget hierarchy of next screen
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-
             //get the stage from an event's source widget
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
             //Create the New Scene
             Scene scene = new Scene(root, 1200, 600);
             stage.setTitle("Inventory System");
-
             //Set the Scene on the stage
             stage.setScene(scene);
-
             //raise the curtain
             stage.show();
         }
+    }
+    public void updateTable(){
+        partTable.setItems(Inventory.getParts());
     }
 }

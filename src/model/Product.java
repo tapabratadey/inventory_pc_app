@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author tapabratadey  Place Your Name Here
+ * @author tapabratadey
  */
 public class Product {
     private int id;

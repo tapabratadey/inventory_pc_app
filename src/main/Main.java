@@ -1,6 +1,13 @@
 /**
  *
- * @author tapabratadey  Place Your Name Here
+ * @author tapabratadey
+ *
+ * JavaDoc folder located at the root of the project folder. named as javadoc
+ *
+ * start(): loads up the main screen
+ * main(): calls addTestData()
+ * addTestData(): 2 instances of products and parts are added to the inventory.
+ *
  */
 package main;
 
