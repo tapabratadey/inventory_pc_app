@@ -89,7 +89,7 @@ public class MainController implements Initializable {
         aPart = partTable.getSelectionModel().getSelectedItems();
         aPart.forEach((part) -> {
             int idx = partTable.getSelectionModel().getSelectedIndex();
-            if (aPart != null){ modPart.partToModify(part, idx); }
+            if (part != null){ modPart.partToModify(part, idx); }
         });
 
         //get the stage from an event's source widget
@@ -125,8 +125,15 @@ public class MainController implements Initializable {
     }
 
     public void toModifyProduct(ActionEvent actionEvent) throws IOException {
-        //load widget hierarchy of next screen
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/ModifyProduct.fxml")));
+        FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyProduct.fxml")));
+        Parent root = (Parent) loader.load();
+        ModifyProduct modProduct = loader.getController();
+        ObservableList<Product> aProduct;
+        aProduct = productTable.getSelectionModel().getSelectedItems();
+        aProduct.forEach((product) -> {
+            int idx = productTable.getSelectionModel().getSelectedIndex();
+            if (product != null){ modProduct.productToModify(product, idx); }
+        });
 
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
