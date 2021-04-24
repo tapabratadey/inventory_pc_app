@@ -21,6 +21,7 @@ import model.Part;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,7 +35,7 @@ public class MainController implements Initializable {
     public TableColumn productInvLevel;
     public TableColumn productPriceUnit;
 
-    private TableView partTable;
+    public TableView partTable;
     public TableColumn partID;
     public TableColumn partName;
     public TableColumn partInvLevel;
@@ -84,9 +85,12 @@ public class MainController implements Initializable {
         FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyPart.fxml")));
         Parent root = (Parent) loader.load();
         ModifyPart modPart = loader.getController();
-        Part part = partTable.getSelectionModel().getSelectedItems();
-        int idx = partTable.getSelectionModel().getSelectedIndex();
-        if (part != null){ modPart.partToModify(part, idx); }
+        ObservableList<Part> aPart;
+        aPart = partTable.getSelectionModel().getSelectedItems();
+        aPart.forEach((part) -> {
+            int idx = partTable.getSelectionModel().getSelectedIndex();
+            if (aPart != null){ modPart.partToModify(part, idx); }
+        });
 
         //get the stage from an event's source widget
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -156,12 +160,19 @@ public class MainController implements Initializable {
     public void toDeleteProduct(ActionEvent actionEvent) {
         Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");
         Optional<ButtonType> optButton = alertUser.showAndWait();
-        if (optButton.isPresent() && optButton.get() == ButtonType.OK){
-            ObservableList<Product> products, aPart;
-            products = productTable.getItems();
-            aPart = productTable.getSelectionModel().getSelectedItems();
-            aPart.forEach(products::remove);
+        try{
+            if (optButton.isPresent() && optButton.get() == ButtonType.OK) {
+                ObservableList<Product> products, aPart;
+                products = productTable.getItems();
+                aPart = productTable.getSelectionModel().getSelectedItems();
+                int idx = productTable.getSelectionModel().getSelectedIndex();
+                if (idx >= 0) { products.remove(idx); }
+            }
         }
+        catch(IndexOutOfBoundsException | NoSuchElementException err){
+            System.out.println(err);
+        }
+
     }
 
     public void toDeletePart(ActionEvent actionEvent) {
@@ -171,7 +182,8 @@ public class MainController implements Initializable {
             ObservableList<Part> parts, aPart;
             parts = partTable.getItems();
             aPart = partTable.getSelectionModel().getSelectedItems();
-            aPart.forEach(parts::remove);
+            int idx = partTable.getSelectionModel().getSelectedIndex();
+            if (idx >= 0) { parts.remove(idx); }
         }
     }
 }

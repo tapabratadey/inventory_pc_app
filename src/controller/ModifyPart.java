@@ -114,12 +114,25 @@ public class ModifyPart {
             InHouse inHousePart = (InHouse)part;
             toggleInHouseBtn.setSelected(true);
             machineIDLabelTxt.setText("Machine ID");
+            partID.setText(Integer.toString(inHousePart.getId()));
             modifyPartName.setText(inHousePart.getName());
             modifyPartInv.setText(Integer.toString(inHousePart.getStock()));
             modifyPartPriceCost.setText(Double.toString(inHousePart.getPrice()));
             modifyPartMax.setText(Integer.toString(inHousePart.getMax()));
             modifyPartMin.setText(Integer.toString(inHousePart.getMin()));
-            machineIDLabelTxt.setText(Integer.toString(inHousePart.getMachineID()));
+            modifyPartMachineID.setText(Integer.toString(inHousePart.getMachineID()));
+        }
+        if (part instanceof Outsourced){
+            Outsourced outSourcedPart = (Outsourced)part;
+            toggleOutsourced.setSelected(true);
+            machineIDLabelTxt.setText("Company name");
+            partID.setText(Integer.toString(outSourcedPart.getId()));
+            modifyPartName.setText(outSourcedPart.getName());
+            modifyPartInv.setText(Integer.toString(outSourcedPart.getStock()));
+            modifyPartPriceCost.setText(Double.toString(outSourcedPart.getPrice()));
+            modifyPartMax.setText(Integer.toString(outSourcedPart.getMax()));
+            modifyPartMin.setText(Integer.toString(outSourcedPart.getMin()));
+            modifyPartMachineID.setText(outSourcedPart.getCompName());
         }
     }
 }
