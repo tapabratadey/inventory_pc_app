@@ -41,10 +41,10 @@ public class Main extends Application {
         Product testProd2 = new Product(2, "testProduct2", 15.0, 5, 5, 3);
         Inventory.addProduct(testProd2);
 
-        Part testPart1 = new InHouse(1, "testPart1", 5.0, 8, 2, 3, 1);
+        Part testPart1 = new InHouse(1, "testPart1", 5.0, 8, 2, 3);
         Inventory.addPart(testPart1);
 
-        Part testPart2 = new InHouse(2, "testPart2", 6.0, 9, 2, 8, 2);
+        Part testPart2 = new InHouse(2, "testPart2", 6.0, 9, 2, 8);
         Inventory.addPart(testPart2);
     }
 

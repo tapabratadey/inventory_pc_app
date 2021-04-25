@@ -69,36 +69,50 @@ public class ModifyPart {
         machineIDLabelTxt.setText("Company Name");
     }
     public void modifyPartSaveButton(ActionEvent actionEvent) throws IOException {
-        int id = partToModify.getId();
-        String partName = modifyPartName.getText();
-        int invLevel = Integer.parseInt(modifyPartInv.getText());
-        double priceCost = Double.parseDouble(modifyPartPriceCost.getText());
-        int partMin = Integer.parseInt(modifyPartMin.getText());
-        int partMax = Integer.parseInt(modifyPartMax.getText());
         try {
-            if (toggleOutsourced.isSelected()) {
-                String compName = modifyPartMachineID.getText();
-                Outsourced addPart = new Outsourced(id, partName, priceCost, invLevel, partMin,
-                        partMax, compName);
-                Inventory.getParts().set(toModifyIdx, addPart);
+            int id = partToModify.getId();
+            String partName = modifyPartName.getText();
+            int invLevel = Integer.parseInt(modifyPartInv.getText());
+            double priceCost = Double.parseDouble(modifyPartPriceCost.getText());
+            int partMin = Integer.parseInt(modifyPartMin.getText());
+            int partMax = Integer.parseInt(modifyPartMax.getText());
+            if (partMin > partMax){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Min value is not allowed to be greater than Max. " +
+                        "Please try again.");
+                alert.showAndWait();
             }
-            if (toggleInHouseBtn.isSelected()) {
-                //                    System.out.println(addPartMachineID.getText());
-                int machineID = Integer.parseInt(modifyPartMachineID.getText());
-                InHouse addPart = new InHouse(id, partName, priceCost, invLevel, partMin,
-                        partMax, machineID);
-                Inventory.getParts().set(toModifyIdx, addPart);
+            else if (invLevel > partMax || invLevel < partMin){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Inventory level cannot be less than min or greater " +
+                        "than max. Please try again.");
+                alert.showAndWait();
+            }else{
+                if (toggleOutsourced.isSelected()) {
+                    String compName = modifyPartMachineID.getText();
+                    Outsourced addPart = new Outsourced(id, partName, priceCost, invLevel, partMin,
+                            partMax);
+                    addPart.setCompName(compName);
+                    Inventory.getParts().set(toModifyIdx, addPart);
+                }
+                if (toggleInHouseBtn.isSelected()) {
+                    //                    System.out.println(addPartMachineID.getText());
+                    int machineID = Integer.parseInt(modifyPartMachineID.getText());
+                    InHouse addPart = new InHouse(id, partName, priceCost, invLevel, partMin,
+                            partMax);
+                    addPart.setMachineID(machineID);
+                    Inventory.getParts().set(toModifyIdx, addPart);
+                }
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
+                //get the stage from an event's source widget
+                Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
+                //Create the New Scene
+                Scene scene = new Scene(root, 1200, 600);
+                stage.setTitle("Inventory System");
+                //Set the Scene on the stage
+                stage.setScene(scene);
+                //raise the curtain
+                stage.show();
             }
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-            //get the stage from an event's source widget
-            Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
-            //Create the New Scene
-            Scene scene = new Scene(root, 1200, 600);
-            stage.setTitle("Inventory System");
-            //Set the Scene on the stage
-            stage.setScene(scene);
-            //raise the curtain
-            stage.show();
+
         }
         catch(NumberFormatException e){
             System.out.println(e);

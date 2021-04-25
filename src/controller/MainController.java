@@ -220,8 +220,18 @@ public class MainController implements Initializable {
                 ObservableList<Product> products, aPart;
                 products = productTable.getItems();
                 aPart = productTable.getSelectionModel().getSelectedItems();
-                int idx = productTable.getSelectionModel().getSelectedIndex();
-                if (idx >= 0) { products.remove(idx); }
+                aPart.forEach((part) -> {
+                    if (part.getAssociatedParts().size() == 0){
+                        int idx = productTable.getSelectionModel().getSelectedIndex();
+                        if (idx >= 0) { products.remove(idx); }
+                    }else{
+                        Alert alertUserErr = new Alert(Alert.AlertType.ERROR, "Cannot delete a product with an " +
+                                "associated part");
+                        alertUserErr.showAndWait();
+                    }
+
+                });
+
             }
         }
         catch(IndexOutOfBoundsException | NoSuchElementException err){

@@ -115,7 +115,7 @@ public class ModifyProduct implements Initializable {
         aPart = partTable.getSelectionModel().getSelectedItems();
         aPart.forEach((part) -> {
             int idx = partTable.getSelectionModel().getSelectedIndex();
-            if (part != null){ asctdPart.setAssociatedParts(part); }
+            asctdPart.setAssociatedParts(part);
         });
 
     }
@@ -136,26 +136,44 @@ public class ModifyProduct implements Initializable {
     }
 
     public void saveProduct(ActionEvent actionEvent) throws IOException {
-        int idPart = asctdPart.getId();
-        String partName = name.getText();
-        int invLevel = Integer.parseInt(inv.getText());
-        double priceCost = Double.parseDouble(price.getText());
-        int partMin = Integer.parseInt(min.getText());
-        int partMax = Integer.parseInt(max.getText());
-        int machineID = Integer.parseInt(id.getText());
-        Product addProduct = new Product(idPart, partName, priceCost, invLevel, partMin,
-                partMax);
-        Inventory.getProducts().set(toModifyIdx, addProduct);
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-        //get the stage from an event's source widget
-        Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
-        //Create the New Scene
-        Scene scene = new Scene(root, 1200, 600);
-        stage.setTitle("Inventory System");
-        //Set the Scene on the stage
-        stage.setScene(scene);
-        //raise the curtain
-        stage.show();
+        try{
+            int idPart = asctdPart.getId();
+            String partName = name.getText();
+            int invLevel = Integer.parseInt(inv.getText());
+            double priceCost = Double.parseDouble(price.getText());
+            int partMin = Integer.parseInt(min.getText());
+            int partMax = Integer.parseInt(max.getText());
+            int machineID = Integer.parseInt(id.getText());
+            if (partMin > partMax){
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Min value is not allowed to be greater than Max. " +
+                        "Please try again.");
+                alert.showAndWait();
+            }
+            else if (invLevel > partMax || invLevel < partMin){
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Inventory level cannot be less than min or greater " +
+                        "than max. Please try again.");
+                alert.showAndWait();
+            }else{
+                Product addProduct = new Product(idPart, partName, priceCost, invLevel, partMin,
+                        partMax);
+                Inventory.getProducts().set(toModifyIdx, addProduct);
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
+                //get the stage from an event's source widget
+                Stage stage = (Stage) ((Parent) actionEvent.getSource()).getScene().getWindow();
+                //Create the New Scene
+                Scene scene = new Scene(root, 1200, 600);
+                stage.setTitle("Inventory System");
+                //Set the Scene on the stage
+                stage.setScene(scene);
+                //raise the curtain
+                stage.show();
+            }
+        }
+        catch(NumberFormatException e){
+            Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Invalid input. Try again.");
+            Optional<ButtonType> optButton = alertUser.showAndWait();
+        }
+
     }
 
     public void searchPartButton(ActionEvent actionEvent) {

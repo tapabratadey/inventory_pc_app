@@ -34,31 +34,23 @@ public class Inventory {
         return products;
     }
     public static Part searchParts(String partToSearch){
-        for (Part part : getParts()){
-            String idInString = String.valueOf(part.getId());
-            if ((part.getName().contains(partToSearch)) ||
-                    (idInString == partToSearch)){
+        for (Part part:Inventory.getParts()) {
+            if(part.getName().contains(partToSearch) ||
+                    new Integer (part.getId()).toString().equals(partToSearch))
                 return part;
-            }
-            else{
-                Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
-                Optional<ButtonType> optButton = alertUser.showAndWait();
-            }
         }
+        Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
+        Optional<ButtonType> optButton = alertUser.showAndWait();
         return null;
     }
     public static Product searchProducts(String partToSearch){
-        for (Product prod : getProducts()){
-            String idInString = String.valueOf(prod.getId());
-            if ((prod.getName().contains(partToSearch)) ||
-                    (idInString == partToSearch)){
+        for (Product prod:Inventory.getProducts()) {
+            if(prod.getName().contains(partToSearch) ||
+                   new Integer (prod.getId()).toString().equals(partToSearch))
                 return prod;
-            }
-            else{
-                Alert alertUser = new Alert(Alert.AlertType.ERROR, "Product not found");
-                Optional<ButtonType> optButton = alertUser.showAndWait();
-            }
         }
+        Alert alertUser = new Alert(Alert.AlertType.ERROR, "Product not found");
+        Optional<ButtonType> optButton = alertUser.showAndWait();
         return null;
     }
 }

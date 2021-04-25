@@ -46,58 +46,61 @@ public class AddPart {
      * @throws IOException
      */
     public void addPartSaveButton(ActionEvent actionEvent) throws IOException{
-        int idCounter = 0;
-        for (Part part: Inventory.getParts()){
-            if (part.getId() > idCounter){
-                idCounter = part.getId();
-            }
-        }
-        partID.setText(String.valueOf(++idCounter));
-        String partName = addPartName.getText();
-        int invLevel = Integer.parseInt(addPartInv.getText());
-        double priceCost = Double.parseDouble(addPartPriceCost.getText());
-        int partMin = Integer.parseInt(addPartMin.getText());
-        int partMax = Integer.parseInt(addPartMax.getText());
         try {
+            int idCounter = 0;
+            for (Part part: Inventory.getParts()){
+                if (part.getId() > idCounter){
+                    idCounter = part.getId();
+                }
+            }
+            partID.setText(String.valueOf(++idCounter));
+            String partName = addPartName.getText();
+            int invLevel = Integer.parseInt(addPartInv.getText());
+            double priceCost = Double.parseDouble(addPartPriceCost.getText());
+            int partMin = Integer.parseInt(addPartMin.getText());
+            int partMax = Integer.parseInt(addPartMax.getText());
             if (partMin > partMax){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Min value is not allowed to be greater than Max");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Min value is not allowed to be greater than Max. " +
+                        "Please try again.");
                 alert.showAndWait();
             }
             else if (invLevel > partMax || invLevel < partMin){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Inventory level cannot be less than min or greater " +
-                        "than max");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Inventory level cannot be less than min or greater " +
+                        "than max. Please try again.");
                 alert.showAndWait();
             }
             else{
                 if (toggleOutsourced.isSelected()){
                     String compName = addPartMachineID.getText();
                     Outsourced addPart = new Outsourced(idCounter, partName,  priceCost,invLevel, partMin,
-                            partMax, compName);
+                            partMax);
+                    addPart.setCompName(compName);
                     Inventory.addPart(addPart);
                 }
                 if (toggleInHouseBtn.isSelected()){
 //                    System.out.println(addPartMachineID.getText());
                     int machineID = Integer.parseInt(addPartMachineID.getText());
                     InHouse addPart = new InHouse(idCounter, partName, priceCost,invLevel, partMin,
-                            partMax, machineID);
+                            partMax);
+                    addPart.setMachineID(machineID);
                     Inventory.addPart(addPart);
                 }
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
+                //get the stage from an event's source widget
+                Stage stage = (Stage) ((Parent)actionEvent.getSource()).getScene().getWindow();
+                //Create the New Scene
+                Scene scene = new Scene(root, 1200, 600);
+                stage.setTitle("Inventory System");
+                //Set the Scene on the stage
+                stage.setScene(scene);
+                //raise the curtain
+                stage.show();
             }
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-            //get the stage from an event's source widget
-            Stage stage = (Stage) ((Parent)actionEvent.getSource()).getScene().getWindow();
-            //Create the New Scene
-            Scene scene = new Scene(root, 1200, 600);
-            stage.setTitle("Inventory System");
-            //Set the Scene on the stage
-            stage.setScene(scene);
-            //raise the curtain
-            stage.show();
         }
         catch(NumberFormatException e){
             System.out.println(e);
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid input");
-            alert.showAndWait();
+            Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Invalid input. Try again.");
+            Optional<ButtonType> optButton = alertUser.showAndWait();
         }
     }
 
