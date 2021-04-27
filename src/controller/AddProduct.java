@@ -33,41 +33,33 @@ import java.util.ResourceBundle;
 
 public class AddProduct implements Initializable {
     //vars
-    public TableView partTable;
+    public TableView<Part> partTable;
     public TableColumn partID;
     public TableColumn partName;
     public TableColumn partInvLevel;
     public TableColumn partPriceUnit;
-    public TextField addPartMax;
-    public TextField addPartMin;
-    public TextField searchPartTxt;
-    Product productToModify;
+    public TextField searchPartsTxt;
     public TextField id;
     public TextField max;
     public TextField min;
     public TextField price;
     public TextField inv;
     public TextField name;
-    public TableView associatedPartTable;
+    public TableView<Part> associatedPartTable;
     public TableColumn associatedPartID;
     public TableColumn associatedPartName;
     public TableColumn associatedPartInvLevel;
     public TableColumn associatedPartPriceUnit;
-    Product asctdPart;
-    private ObservableList<Part> assocPart = FXCollections.observableArrayList();
+    ObservableList<Part> associatedParts = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        updateTable();
         partTable.setItems(Inventory.getParts());
         partID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partInvLevel.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
         partPriceUnit.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
 
-        asctdPart = new Product(0, null, 0.0, 0, 0, 0);
-        System.out.println(asctdPart.getAssociatedParts());
-        associatedPartTable.setItems(asctdPart.getAssociatedParts());
         associatedPartID.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         associatedPartName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         associatedPartInvLevel.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
@@ -83,16 +75,11 @@ public class AddProduct implements Initializable {
         Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?");
         Optional<ButtonType> optButton = alertUser.showAndWait();
         if (optButton.isPresent() && optButton.get() == ButtonType.OK){
-            //load widget hierarchy of next screen
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-            //get the stage from an event's source widget
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-            //Create the New Scene
             Scene scene = new Scene(root, 1200, 600);
             stage.setTitle("Inventory System");
-            //Set the Scene on the stage
             stage.setScene(scene);
-            //raise the curtain
             stage.show();
         }
     }
@@ -102,8 +89,15 @@ public class AddProduct implements Initializable {
      * @param actionEvent
      */
     public void searchPartButton(ActionEvent actionEvent) {
-        String searchPartText = searchPartTxt.getText();
-        partTable.getSelectionModel().select(Inventory.searchParts(searchPartText));
+        String searchPartText = searchPartsTxt.getText();
+        ObservableList<Part> parts = Inventory.searchParts(searchPartText);
+        if (parts.size() == 0){
+            Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
+            alertUser.showAndWait();
+        }else{
+            partTable.setItems(parts);
+            searchPartsTxt.setText("");
+        }
     }
 
     /**
@@ -113,17 +107,17 @@ public class AddProduct implements Initializable {
     public void saveProduct(ActionEvent actionEvent) {
         try {
             int idCounter = 0;
+            for (Product prod: Inventory.getProducts()){
+                if (prod.getId() > idCounter){
+                    idCounter = prod.getId();
+                }
+            }
             partID.setText(String.valueOf(++idCounter));
             String pName = name.getText();
             int invLevel = Integer.parseInt(inv.getText());
             double priceCost = Double.parseDouble(price.getText());
             int partMin = Integer.parseInt(min.getText());
             int partMax = Integer.parseInt(max.getText());
-            for (Product product: Inventory.getProducts()){
-                if (product.getId() > idCounter){
-                    idCounter = product.getId();
-                }
-            }
             if (partMin > partMax){
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Min value is not allowed to be greater than Max. " +
                         "Please try again.");
@@ -134,25 +128,17 @@ public class AddProduct implements Initializable {
                         "than max. Please try again.");
                 alert.showAndWait();
             }else{
-                asctdPart.setId(idCounter);
-                asctdPart.setName(pName);
-                asctdPart.setPrice(priceCost);
-                asctdPart.setStock(invLevel);
-                asctdPart.setMin(partMin);
-                asctdPart.setMax(partMax);
-                for (int i = 0; i < assocPart.size(); i++){
-                    asctdPart.setAssociatedParts(assocPart.get(i));
+                Product product = new Product(idCounter, pName, priceCost, invLevel, partMin, partMax);
+                for (int i = 0; i < associatedParts.size(); i++){
+//                    System.out.println(product.)
+                    product.setAssociatedParts(associatedParts.get(i));
                 }
-                Inventory.addProduct(asctdPart);
+                Inventory.addProduct(product);
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Main.fxml")));
-                //get the stage from an event's source widget
                 Stage stage = (Stage) ((Parent)actionEvent.getSource()).getScene().getWindow();
-                //Create the New Scene
                 Scene scene = new Scene(root, 1200, 600);
                 stage.setTitle("Inventory System");
-                //Set the Scene on the stage
                 stage.setScene(scene);
-                //raise the curtain
                 stage.show();
             }
         }
@@ -161,7 +147,6 @@ public class AddProduct implements Initializable {
             Alert alertUser = new Alert(Alert.AlertType.CONFIRMATION, "Invalid input. Try again.");
             Optional<ButtonType> optButton = alertUser.showAndWait();
         }
-
     }
 
     /**
@@ -173,10 +158,10 @@ public class AddProduct implements Initializable {
         Optional<ButtonType> optButton = alertUser.showAndWait();
         try {
             if (optButton.isPresent() && optButton.get() == ButtonType.OK) {
-                int idx = associatedPartTable.getSelectionModel().getSelectedIndex();
-                if (idx >= 0) {
-                    asctdPart.getAssociatedParts().remove(associatedPartTable.getSelectionModel().getSelectedItem());
-                    assocPart.remove(associatedPartTable.getSelectionModel().getSelectedItem());
+                Part part = associatedPartTable.getSelectionModel().getSelectedItem();
+                if (part != null){
+                    associatedParts.remove(part);
+                    associatedPartTable.setItems(associatedParts);
                 }
             }
         } catch (IndexOutOfBoundsException | NoSuchElementException err) {
@@ -189,18 +174,10 @@ public class AddProduct implements Initializable {
      * @param actionEvent
      */
     public void addProductButton(ActionEvent actionEvent) {
-        ObservableList<Part> aPart;
-        aPart = partTable.getSelectionModel().getSelectedItems();
-        aPart.forEach((part) -> {
-            assocPart.add(part);
-            associatedPartTable.setItems(assocPart);
-        });
-    }
-
-    /**
-     * updateTable sets up the parts Table
-     */
-    public void updateTable(){
-        partTable.setItems(Inventory.getParts());
+        Part part = partTable.getSelectionModel().getSelectedItem();
+        if (part != null && !associatedParts.contains(part)){
+            associatedParts.add(part);
+            associatedPartTable.setItems(associatedParts);
+        }
     }
 }

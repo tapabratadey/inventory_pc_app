@@ -30,7 +30,8 @@
                </font>
             </Label>
             <Button layoutX="496.0" layoutY="26.0" mnemonicParsing="false" onAction="#searchPartButton" prefHeight="27.0" prefWidth="54.0" text="Search" />
-            <TextField fx:id="searchPartTxt" layoutX="343.0" layoutY="27.0" />
+            <TextField fx:id="searchPartsTxt" layoutX="343.0"
+                       layoutY="27.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="600.0" layoutY="59.0" prefHeight="492.0" prefWidth="371.0" style="-fx-border-color: black; -fx-border-radius: 20;">

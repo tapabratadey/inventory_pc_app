@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,19 +40,19 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     // vars
-    public TableView productTable;
+    public TableView<Product> productTable;
     public TableColumn productID;
     public TableColumn productName;
     public TableColumn productInvLevel;
     public TableColumn productPriceUnit;
 
-    public TableView partTable;
+    public TableView<Part> partTable;
     public TableColumn partID;
     public TableColumn partName;
     public TableColumn partInvLevel;
     public TableColumn partPriceUnit;
     public TextField searchProductsTxt;
-    public TextField searchPartTxt;
+    public TextField searchPartsTxt;
 
     /**
      * @param url
@@ -102,24 +103,22 @@ public class MainController implements Initializable {
      */
 
     public void toModifyPart(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyPart.fxml")));
-        Parent root = (Parent) loader.load();
-        ModifyPart modPart = loader.getController();
-        ObservableList<Part> aPart;
-        aPart = partTable.getSelectionModel().getSelectedItems();
-        aPart.forEach((part) -> {
+        Part part = partTable.getSelectionModel().getSelectedItem();
+        if (part == null){
+            Alert alertUserErr = new Alert(Alert.AlertType.ERROR, "Please select a part to modify");
+            alertUserErr.showAndWait();
+        }else{
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyPart.fxml")));
+            Parent root = (Parent) loader.load();
+            ModifyPart modPart = loader.getController();
             int idx = partTable.getSelectionModel().getSelectedIndex();
-            if (part != null){ modPart.partToModify(part, idx); }
-        });
-        //get the stage from an event's source widget
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        //Create the New Scene
-        Scene scene = new Scene(root, 668, 400);
-        stage.setTitle("Modify Part");
-        //Set the Scene on the stage
-        stage.setScene(scene);
-        //raise the curtain
-        stage.show();
+            modPart.partToModify(part, idx);
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 668, 400);
+            stage.setTitle("Modify Part");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     /**
@@ -129,6 +128,11 @@ public class MainController implements Initializable {
      */
 
     public void toAddProduct(ActionEvent actionEvent) throws IOException {
+        ObservableList<Part> aPart;
+        aPart = partTable.getSelectionModel().getSelectedItems();
+        aPart.forEach((part) -> {
+            System.out.println(part.getId());
+        });
         //load widget hierarchy of next screen
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/AddProduct.fxml")));
         //get the stage from an event's source widget
@@ -150,24 +154,22 @@ public class MainController implements Initializable {
      */
 
     public void toModifyProduct(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyProduct.fxml")));
-        Parent root = (Parent) loader.load();
-        ModifyProduct modProduct = loader.getController();
-        ObservableList<Product> aProduct;
-        aProduct = productTable.getSelectionModel().getSelectedItems();
-        aProduct.forEach((product) -> {
+        Product product = productTable.getSelectionModel().getSelectedItem();
+        if (product == null){
+            Alert alertUserErr = new Alert(Alert.AlertType.ERROR, "Please select a product to modify");
+            alertUserErr.showAndWait();
+        }else{
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/view/ModifyProduct.fxml")));
+            Parent root = (Parent) loader.load();
+            ModifyProduct modProduct = loader.getController();
             int idx = productTable.getSelectionModel().getSelectedIndex();
-            if (product != null){ modProduct.productToModify(product, idx); }
-        });
-        //get the stage from an event's source widget
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        //Create the New Scene
-        Scene scene = new Scene(root, 1032, 645);
-        stage.setTitle("Modify Product");
-        //Set the Scene on the stage
-        stage.setScene(scene);
-        //raise the curtain
-        stage.show();
+            modProduct.productToModify(product, idx);
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1032, 645);
+            stage.setTitle("Modify Part");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     /**
@@ -189,7 +191,19 @@ public class MainController implements Initializable {
 
     public void searchProductsButton(ActionEvent actionEvent) {
         String searchProdText = searchProductsTxt.getText();
-        productTable.getSelectionModel().select(Inventory.searchProducts(searchProdText));
+        ObservableList<Product> products = Inventory.searchProducts(searchProdText);
+        if (products.size() == 0){
+            Alert alertUser = new Alert(Alert.AlertType.ERROR, "Product not found");
+            alertUser.showAndWait();
+        }else{
+            productTable.setItems(products);
+            searchPartsTxt.setText("");
+//            products.forEach((product) -> {
+//                productTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//                productTable.getSelectionModel().select(product);
+//            });
+        }
+
     }
 
     /**
@@ -200,8 +214,16 @@ public class MainController implements Initializable {
      */
 
     public void searchPartButton(ActionEvent actionEvent) {
-        String searchPartText = searchPartTxt.getText();
-        partTable.getSelectionModel().select(Inventory.searchParts(searchPartText));
+
+        String searchPartText = searchPartsTxt.getText();
+        ObservableList<Part> parts = Inventory.searchParts(searchPartText);
+        if (parts.size() == 0){
+            Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
+            alertUser.showAndWait();
+        }else{
+            partTable.setItems(parts);
+            searchPartsTxt.setText("");
+        }
     }
 
     /**

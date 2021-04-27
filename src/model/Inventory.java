@@ -33,24 +33,24 @@ public class Inventory {
     public static ObservableList<Product> getProducts(){
         return products;
     }
-    public static Part searchParts(String partToSearch){
-        for (Part part:Inventory.getParts()) {
-            if(part.getName().contains(partToSearch) ||
-                    new Integer (part.getId()).toString().equals(partToSearch))
-                return part;
+    public static ObservableList<Part> searchParts(String partToSearch){
+        ObservableList<Part> findParts = FXCollections.observableArrayList();
+        for (Part part:parts){
+            String convert = String.valueOf(part.getId());
+            if (part.getName().contains(partToSearch) || convert.contains(partToSearch)){
+                findParts.add(part);
+            }
         }
-        Alert alertUser = new Alert(Alert.AlertType.ERROR, "Part not found");
-        Optional<ButtonType> optButton = alertUser.showAndWait();
-        return null;
+        return findParts;
     }
-    public static Product searchProducts(String partToSearch){
-        for (Product prod:Inventory.getProducts()) {
-            if(prod.getName().contains(partToSearch) ||
-                   new Integer (prod.getId()).toString().equals(partToSearch))
-                return prod;
+    public static ObservableList<Product> searchProducts(String partToSearch){
+        ObservableList<Product> findProducts = FXCollections.observableArrayList();
+        for (Product prod:products){
+            String convert = String.valueOf(prod.getId());
+            if (prod.getName().contains(partToSearch) || convert.contains(partToSearch)){
+                findProducts.add(prod);
+            }
         }
-        Alert alertUser = new Alert(Alert.AlertType.ERROR, "Product not found");
-        Optional<ButtonType> optButton = alertUser.showAndWait();
-        return null;
+        return findProducts;
     }
 }
